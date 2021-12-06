@@ -83,27 +83,51 @@ public sealed class ResourceManager : MonoBehaviour
     }
 
     // Consumes an amount of a given resource
-    public void Consume(Resource.ResourceType r, float amount)
+    public bool Consume(Resource.ResourceType r, float amount)
     {
+        Debug.Log("RM : Consuming " + amount + " of " + r);
+
         switch (r)
         {
             case Resource.ResourceType.People:
-                GetInstance()._people.Consume(amount);
-                break;
+                return GetInstance()._people.Consume(amount);
 
             case Resource.ResourceType.Energy:
-                GetInstance()._energy.Consume(amount);
-                break;
+                return GetInstance()._energy.Consume(amount);
 
             case Resource.ResourceType.Food:
-                GetInstance()._food.Consume(amount);
-                break;
+                return GetInstance()._food.Consume(amount);
 
             default:
-                break;
+                return false;
+        }
+    }
+
+    // Approves a construction if the costs are acceptable
+    public bool ApproveConstruct(Building.Costs cs)
+    {
+        foreach (Building.Costs.Cost c in cs)
+        {
+            switch (c.Resource)
+            {
+                case Resource.ResourceType.People:
+                    if (_people.Amount < c.Price) return false;
+                    break;
+
+                case Resource.ResourceType.Energy:
+                    if (_energy.Amount < c.Price) return false;
+                    break;
+
+                case Resource.ResourceType.Food:
+                    if (_food.Amount < c.Price) return false;
+                    break;
+
+                default:
+                    break;
+            }
         }
 
-        Debug.Log("RM : Consuming " + amount + " of " + r);
+        return true;
     }
 
 }

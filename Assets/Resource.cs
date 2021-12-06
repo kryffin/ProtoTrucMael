@@ -18,18 +18,19 @@ public class Resource
         _amount = amount;
     }
 
-    // Produces x amount of the resource and returns the new amount
-    public float Produce(float x)
+    // Produces x amount of the resource
+    public void Produce(float x)
     {
         _amount += x;
-        return _amount;
     }
 
-    // Consumes x amount of the resource and returns the new amount
-    public float Consume(float x)
+    // Consumes x amount of the resource and returns whether there is enough resource or not
+    public bool Consume(float x)
     {
+        if (_amount - x < 0f) return false;
+
         _amount -= x;
-        return _amount;
+        return true;
     }
 
 }
